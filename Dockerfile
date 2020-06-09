@@ -1,5 +1,22 @@
-FROM oracle/graalvm-ce:latest
-USER root
+FROM gradle:jdk13
+
+# Install Graal
+# Prepare
+RUN apt-get update && \
+    apt-get install -y wget gcc libz-dev && \
+    rm -rf /var/lib/apt/lists/*
+
+ARG GRAAL_VERSION=20.1.0
+ARG JDK_VERSION=11
+RUN wget https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-$GRAAL_VERSION/graalvm-ce-java$JDK_VERSION-linux-amd64-$GRAAL_VERSION.tar.gz && \
+    tar -xzf graalvm-ce-java$JDK_VERSION-linux-amd64-$GRAAL_VERSION.tar.gz && \
+    rm graalvm-ce-java$JDK_VERSION-linux-amd64-$GRAAL_VERSION.tar.gz && \
+		graalvm-ce-java$JDK_VERSION-$GRAAL_VERSION/bin/gu install native-image
+
+ENV PATH=graalvm-ce-java$JDK_VERSION-$GRAAL_VERSION/bin:$PATH
+
+RUN native-image --version
+
 RUN curl -sL https://deb.nodesource.com/setup_6.x | bash -
 RUN apt-get update && apt-get install -y --no-install-recommends \
 		openssh-server \
