@@ -8,25 +8,13 @@ RUN apt-get update && \
 
 ARG GRAAL_VERSION=20.1.0
 ARG JDK_VERSION=11
-RUN wget https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-$GRAAL_VERSION/graalvm-ce-java$JDK_VERSION-linux-amd64-$GRAAL_VERSION.tar.gz && \
+RUN cd / && \
+    wget https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-$GRAAL_VERSION/graalvm-ce-java$JDK_VERSION-linux-amd64-$GRAAL_VERSION.tar.gz && \
     tar -xzf graalvm-ce-java$JDK_VERSION-linux-amd64-$GRAAL_VERSION.tar.gz && \
     rm graalvm-ce-java$JDK_VERSION-linux-amd64-$GRAAL_VERSION.tar.gz && \
-		graalvm-ce-java$JDK_VERSION-$GRAAL_VERSION/bin/gu install native-image
+    /graalvm-ce-java$JDK_VERSION-$GRAAL_VERSION/bin/gu install native-image
 
-ENV PATH=graalvm-ce-java$JDK_VERSION-$GRAAL_VERSION/bin:$PATH
-
-RUN native-image --version
-
-RUN curl -sL https://deb.nodesource.com/setup_6.x | bash -
-RUN apt-get update && apt-get install -y --no-install-recommends \
-		openssh-server \
-		netcat-openbsd \
-		git \
-		nodejs \
-	&& apt-get upgrade -y \
-	&& rm -rf /var/lib/apt/lists/* /var/cache/apt
-
-RUN ln -s "$(which nodejs)" /usr/local
+ENV PATH=/graalvm-ce-java$JDK_VERSION-$GRAAL_VERSION/bin:$PATH
 
 # Install Docker
 RUN apt-get update && apt-get install -y \
