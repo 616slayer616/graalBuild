@@ -6,7 +6,7 @@ RUN apt-get update && \
     apt-get install -y wget gcc libz-dev && \
     rm -rf /var/lib/apt/lists/*
 
-ARG GRAAL_VERSION=20.1.0
+ARG GRAAL_VERSION=20.2.0
 ARG JDK_VERSION=11
 RUN cd / && \
     wget https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-$GRAAL_VERSION/graalvm-ce-java$JDK_VERSION-linux-amd64-$GRAAL_VERSION.tar.gz && \
